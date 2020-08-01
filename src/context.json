@@ -1,0 +1,15 @@
+{
+  "id": "fruit",
+  "class": "bean.Fruit",
+  "property": [
+    {
+      "name": "quality",
+      "value": "0.2",
+      "code": [
+        "red",
+        "green"
+      ],
+      "type": "node"
+    }
+  ]
+}

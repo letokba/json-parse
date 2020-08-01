@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="20140107">
+    <CLASSES>
+      <root url="file://$MAVEN_REPOSITORY$/org/json/json/20140107" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/json-20140107-sources.jar!/" />
+    </SOURCES>
+    <jarDirectory url="file://$MAVEN_REPOSITORY$/org/json/json/20140107" recursive="false" />
+  </library>
+</component>
