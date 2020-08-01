@@ -1,4 +1,4 @@
-import json.JsonNode;
+import json.JsonObject;
 import resolve.JsonResolver;
 
 import java.io.File;
@@ -11,10 +11,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         JsonResolver resolver = new JsonResolver();
-        File file = new File("src/house.json");
+        File file = new File("src/context.json");
         resolver.resolve(file);
-        JsonNode jsonObject = resolver.getJsonNode();
-        JsonNode property = jsonObject.getChild("property");
-
+        JsonObject jsonObject = (JsonObject) resolver.getJsonNode();
     }
 }
