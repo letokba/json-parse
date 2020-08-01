@@ -1,13 +1,15 @@
 package resolve;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
  * @author Wait
  */
-public abstract class AbstractJsonStream  implements JsonStream {
-
+public  class ImplJsonStream  implements JsonStream {
+    private BufferedInputStream in;
     private static final int DEFAULT_SIZE = 256;
 
     private byte[] buf;
@@ -15,7 +17,19 @@ public abstract class AbstractJsonStream  implements JsonStream {
     private int count = 0;
     private boolean isString = false;
 
-    public AbstractJsonStream(int size) {
+    public ImplJsonStream(String json) {
+        this(json.length());
+        fill(json.getBytes(), json.length());
+    }
+
+
+
+    public ImplJsonStream(InputStream in) {
+        this(DEFAULT_SIZE);
+        this.in = new BufferedInputStream(in);
+    }
+
+    public ImplJsonStream(int size) {
         this.buf = new byte[size];
     }
 
@@ -23,14 +37,21 @@ public abstract class AbstractJsonStream  implements JsonStream {
         return buf.length;
     }
 
-    public AbstractJsonStream() {
+    public ImplJsonStream() {
         this(DEFAULT_SIZE);
     }
 
     @Override
-    public int read() throws IOException {
+    public int read() {
         if(isNeedFill()){
-            return -1;
+            try {
+                readBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(isNeedFill()){
+                return -1;
+            }
         }
         int b = buf[pos++];
 
@@ -53,12 +74,20 @@ public abstract class AbstractJsonStream  implements JsonStream {
             byte b = buffer[i];
             inspectQuotation(b);
             if(isNotInvalid(b) || isString){
-
                 buf[count++] = b;
             }
         }
 
         this.pos = 0;
+    }
+
+    private void readBytes() throws IOException {
+        if(in == null) {
+            return;
+        }
+        byte[] buffer = new byte[getSize()];
+        int n =  in.read(buffer);
+        fill(buffer, n);
     }
 
     private boolean isNotInvalid(byte b) {

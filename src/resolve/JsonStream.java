@@ -7,6 +7,6 @@ import java.io.IOException;
  */
 public interface JsonStream {
 
-    public int read() throws IOException;
+    public int read() ;
 
 }

@@ -1,14 +1,8 @@
-import com.alibaba.fastjson.JSONArray;
 import json.JsonNode;
-import resolve.JsonFileStream;
-import resolve.JsonObjectResolver;
 import resolve.JsonResolver;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-
-import static java.lang.System.in;
 
 /**
  * @author Wait
@@ -16,11 +10,11 @@ import static java.lang.System.in;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        JsonResolver resolver = new JsonObjectResolver();
-        File file = new File("D:\\Wait\\Documents\\workspace\\Java2020\\projects\\Json Parse\\src\\context.json");
+        JsonResolver resolver = new JsonResolver();
+        File file = new File("src/house.json");
         resolver.resolve(file);
-        JsonNode jsonObject = resolver.getJsonObject();
+        JsonNode jsonObject = resolver.getJsonNode();
         JsonNode property = jsonObject.getChild("property");
-        System.out.println(property);
+
     }
 }
