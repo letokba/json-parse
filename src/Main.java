@@ -17,10 +17,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         JsonResolver resolver = new JsonObjectResolver();
-        File file = new File("D:\\Wait\\Documents\\workspace\\Java2020\\projects\\Json Parse\\src\\house.json");
+        File file = new File("D:\\Wait\\Documents\\workspace\\Java2020\\projects\\Json Parse\\src\\context.json");
         resolver.resolve(file);
         JsonNode jsonObject = resolver.getJsonObject();
-        System.out.println(jsonObject);
-        JSONArray
+        JsonNode property = jsonObject.getChild("property");
+        System.out.println(property);
     }
 }

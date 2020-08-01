@@ -3,7 +3,7 @@ package resolve;
 import json.JsonArray;
 import json.JsonNode;
 import json.JsonObject;
-import type.ValueHandler;
+import type.ValueResolver;
 
 import java.io.*;
 
@@ -12,7 +12,7 @@ import java.io.*;
  */
 public abstract class AbstractJsonResolver implements JsonResolver {
     private JsonNode container;
-    private ValueHandler valueHandler;
+    private ValueResolver valueResolver;
     private JsonStream in;
     private JsonKeyBuffer buffer = new JsonKeyBuffer();
 
@@ -20,19 +20,16 @@ public abstract class AbstractJsonResolver implements JsonResolver {
         return container;
     }
 
-    public AbstractJsonResolver(JsonNode container, ValueHandler valueHandler) {
+    public AbstractJsonResolver(JsonNode container, ValueResolver valueResolver) {
         this.container = container;
-        this.valueHandler = valueHandler;
+        this.valueResolver = valueResolver;
     }
 
-    @Override
-    public void setValueHandler(ValueHandler valueHandler) {
-        this.valueHandler = valueHandler;
-    }
 
     @Override
-    public void resolve(File file) throws FileNotFoundException {
-        this.in = new JsonFileStream(file);
+    public void resolve(File file) throws IOException {
+        resolve(new JsonFileStream(file));
+
     }
 
     @Override
@@ -115,7 +112,7 @@ public abstract class AbstractJsonResolver implements JsonResolver {
             }
             this.container.appendChild(object);
         }
-        new JsonObjectResolver(object, valueHandler).resolve(in);
+        new JsonObjectResolver(object, valueResolver).resolve(in);
     }
 
 
@@ -129,7 +126,7 @@ public abstract class AbstractJsonResolver implements JsonResolver {
         if(key != null) {
             array.setNodeName(key);
         }
-        new JsonArrayResolver(array, valueHandler).resolve(in);
+        new JsonArrayResolver(array, valueResolver).resolve(in);
         this.container.appendChild(array);
     }
 
@@ -144,7 +141,7 @@ public abstract class AbstractJsonResolver implements JsonResolver {
         if(buf.length() == 0){
             return;
         }
-        Object value = this.valueHandler.resolve(buf);
+        Object value = this.valueResolver.resolve(buf);
         if(container instanceof JsonArray){
             JsonArray array = (JsonArray)container;
             array.add(value);

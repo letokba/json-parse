@@ -2,8 +2,10 @@ package resolve;
 
 import json.JsonNode;
 import json.JsonObject;
-import type.JsonValueHandle;
-import type.ValueHandler;
+import type.JsonValueResolver;
+import type.ValueResolver;
+
+import javax.rmi.CORBA.ValueHandler;
 
 
 /**
@@ -12,11 +14,11 @@ import type.ValueHandler;
 public class JsonObjectResolver extends AbstractJsonResolver {
 
     public JsonObjectResolver() {
-        this(new JsonObject(), new JsonValueHandle());
+        this(new JsonObject(), new JsonValueResolver());
     }
 
-    public JsonObjectResolver(JsonNode container, ValueHandler valueHandler) {
-        super(container, valueHandler);
+    public JsonObjectResolver(JsonNode container, ValueResolver valueResolver) {
+        super(container, valueResolver);
     }
 
 

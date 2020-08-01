@@ -4,7 +4,7 @@
   "property": [
     {
       "name": "quality",
-      "value": "0.2",
+      "value": "",
       "code": [
         "red",
         "green"
