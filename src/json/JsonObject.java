@@ -1,7 +1,5 @@
 package json;
 
-import type.Null;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +9,8 @@ import java.util.Map;
 public class JsonObject  implements Json {
     private static final int DEFAULT_CAPACITY = 10;
     private Map<String , Object> map;
+
+
 
     public JsonObject(int initialCapacity) {
         this.map = new HashMap<>(initialCapacity);

@@ -9,10 +9,11 @@ import java.io.IOException;
  */
 public class Main {
 
+
     public static void main(String[] args) throws IOException {
         JsonResolver resolver = new JsonResolver();
         File file = new File("src/context.json");
         resolver.resolve(file);
-        JsonObject jsonObject = (JsonObject) resolver.getJsonNode();
+        JsonObject jsonObject = (JsonObject) resolver.getJson();
     }
 }

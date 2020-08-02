@@ -1,4 +1,4 @@
-package type;
+package json;
 
 /**
  * @author Wait

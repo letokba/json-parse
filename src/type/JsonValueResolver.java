@@ -1,5 +1,7 @@
 package type;
 
+import json.Null;
+
 /**
  * @author Wait
  * a JsonValueResolver is used to resolve the value that is belong to the JSON.
