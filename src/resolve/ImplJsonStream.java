@@ -1,36 +1,34 @@
 package resolve;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 
 /**
  * @author Wait
  */
 public  class ImplJsonStream  implements JsonStream {
-    private BufferedInputStream in;
+    private BufferedReader reader;
     private static final int DEFAULT_SIZE = 256;
 
-    private byte[] buf;
+    private char[] buf;
     private int pos = 0;
     private int count = 0;
     private boolean isString = false;
 
     public ImplJsonStream(String json) {
         this(json.length());
-        fill(json.getBytes(), json.length());
+        fill(json.toCharArray(), json.length());
     }
 
 
 
-    public ImplJsonStream(InputStream in) {
+    public ImplJsonStream(Reader reader) {
         this(DEFAULT_SIZE);
-        this.in = new BufferedInputStream(in);
+        this.reader = new BufferedReader(reader);
     }
 
     public ImplJsonStream(int size) {
-        this.buf = new byte[size];
+        this.buf = new char[size];
     }
 
     public int getSize() {
@@ -58,7 +56,7 @@ public  class ImplJsonStream  implements JsonStream {
         return b;
     }
 
-    private void inspectQuotation(int b) {
+    private void inspectQuotation(char b) {
         if(b == '"'){
             this.isString = !isString;
         }
@@ -68,10 +66,10 @@ public  class ImplJsonStream  implements JsonStream {
         return pos >= count;
     }
 
-    public void fill(byte[] buffer, int n)  {
+    public void fill(char[] buffer, int n)  {
         this.count = 0;
         for (int i = 0; i < n; i++) {
-            byte b = buffer[i];
+            char b = buffer[i];
             inspectQuotation(b);
             if(isNotInvalid(b) || isString){
                 buf[count++] = b;
@@ -82,15 +80,15 @@ public  class ImplJsonStream  implements JsonStream {
     }
 
     private void readBytes() throws IOException {
-        if(in == null) {
+        if(this.reader == null) {
             return;
         }
-        byte[] buffer = new byte[getSize()];
-        int n =  in.read(buffer);
+        char[] buffer = new char[getSize()];
+        int n =  this.reader.read(buffer);
         fill(buffer, n);
     }
 
-    private boolean isNotInvalid(byte b) {
+    private boolean isNotInvalid(char b) {
         return b != ' ' && b != '\n' && b != '\r' && b != '\t';
     }
 }

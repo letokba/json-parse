@@ -2,7 +2,9 @@ package resolve;
 
 import json.Json;
 import json.JsonArray;
+import json.JsonException;
 import json.JsonObject;
+import org.json.JSONException;
 import type.JsonValueResolver;
 import type.ValueResolver;
 
@@ -22,13 +24,13 @@ import java.io.*;
  * open one or more resoler to completely resolve the json.
  * suit method to deal with
  */
-public  class JsonResolver{
+public class JsonResolver{
 
     /**
-     * a Json container include JsonObject and JsonArray.
+     * a Json context include JsonObject and JsonArray.
      * the resolved value will put to the container.
      */
-    private Json container;
+    private Json context;
 
     /**
      * a Json value resolver.
@@ -70,28 +72,98 @@ public  class JsonResolver{
     }
 
 
+
     /**
      * construct a JsonResolver Object and
-     * @param container
+     * @param context
      *                  a Json Type one of (JsonObject or JsonArray)
      * @param valueResolver
      *                  a Json Value Resolver
      */
-    public JsonResolver(Json container, ValueResolver valueResolver) {
+    public JsonResolver(Json context, ValueResolver valueResolver) {
         this.valueResolver = valueResolver;
-        this.container = container;
+        this.context = context;
     }
 
+    /**
+     * resolve Json text
+     * @param text
+     *          a json text
+     * @return a JsonObject
+     */
+    public JsonObject resolveObject(String text) {
+        Json object = resolve(text);
+        if (object instanceof JsonObject){
+            return (JsonObject)object;
+        }
+        throw new JsonException("the JSON is not JsonObject");
+    }
+
+    /**
+     * resolve Json File
+     * @param reader
+     *              a reader base Json File
+     * @return a JsonObject
+     * @throws IOException
+     */
+    public JsonObject resolveObject(Reader reader) throws IOException {
+        Json context = resolve(reader);
+        if(context instanceof JsonObject) {
+            return (JsonObject)context;
+        }
+        throw new JsonException("the Json is not a JsonObject");
+    }
+
+    /**
+     * resolve Json text
+     * @param text
+     *          a json text
+     * @return a JsonArray
+     */
+    public JsonArray resolveArray(String text) {
+        Json array = resolve(text);
+        if(array instanceof  JsonArray) {
+            return (JsonArray)array;
+        }
+        throw new JsonException("the JSON is not JsonArray ");
+    }
+
+    /**
+     * resolve Json File
+     * @param reader
+     *              a reader base Json File
+     * @return a JsonArray
+     * @throws IOException
+     */
+    public JsonArray resolveArray(Reader reader) throws IOException {
+        Json context = resolve(reader);
+        if(context instanceof  JsonArray) {
+            return (JsonArray)context;
+        }
+        throw new JsonException("the JSON is not JsonArray ");
+    }
+
+    /**
+     * resolve Json Text
+     * @param text
+     *            a json text
+     */
+    public Json resolve(String text) {
+        // before resolving, empty context.
+        setContext(null);
+        return resolve(new ImplJsonStream(text));
+    }
 
     /**
      * resolve the json file
-     * @param file
-     *              the Json File Format
+     * @param reader
+     *              the Json File Format Stream
      * @throws IOException
      */
-    public void resolve(File file) throws IOException {
-        resolve(new ImplJsonStream(new FileInputStream(file)));
-
+    public Json resolve(Reader reader) throws IOException {
+        //before resolve, empty context.
+        setContext(null);
+        return resolve(new ImplJsonStream(reader));
     }
 
     /**
@@ -100,7 +172,7 @@ public  class JsonResolver{
      * @param stream
      *              a Json data stream
      */
-    public void resolve(JsonStream stream)  {
+    public Json resolve(JsonStream stream)  {
         this.in = stream;
         int b = -1;
         while ((b = in.read()) != -1) {
@@ -108,20 +180,20 @@ public  class JsonResolver{
                 break;
             };
         }
-
+        return getJson();
     }
 
     /**
-     * get the current Json Container one of (JsonArray or JsonObject)
+     * get the current Json context one of (JsonArray or JsonObject)
      *
      * @return a Json Object inherited the interface of <code>Json</code>
      */
     public Json getJson() {
-        return this.container;
+        return this.context;
     }
 
-    public void setContainer(Json json) {
-        this.container = json;
+    public void setContext(Json json) {
+        this.context = json;
     }
 
     /**
@@ -140,7 +212,13 @@ public  class JsonResolver{
         buf.setLength(0);
     }
 
+    private String getKey() {
+        return valueResolver.parseString(this.key);
+    }
 
+    private void resetKey() {
+        this.key = null;
+    }
 
     /**
      * a main method for the Json Resolver to dispatch each character.
@@ -208,11 +286,11 @@ public  class JsonResolver{
     private void beginObject()  {
         if(getJson() == null) {
             // if don't set container, default set JsonObject.
-            setContainer(new JsonObject());
+            setContext(new JsonObject());
             return;
         }
         Json object = new JsonObject();
-        startResolver(object);
+        startNextResolver(object);
     }
 
     /**
@@ -222,22 +300,22 @@ public  class JsonResolver{
     private void beginArray()  {
         if(getJson() == null) {
             // if don't set container, default set JsonArray.
-            setContainer(new JsonArray());
+            setContext(new JsonArray());
             return;
         }
         Json array  = new JsonArray();
-        startResolver(array);
+        startNextResolver(array);
     }
 
     /**
      * create a new resolver
      * before new resolve, need to put the new container to current container.
-     * @param nextContainer
+     * @param nextContext
      *            new Resolver Object's container
      */
-    private void startResolver(Json nextContainer) {
-        addToContainer(nextContainer);
-        new JsonResolver(nextContainer, valueResolver).resolve(in);
+    private void startNextResolver(Json nextContext) {
+        addToContext(nextContext);
+        new JsonResolver(nextContext, valueResolver).resolve(in);
     }
 
     /**
@@ -261,14 +339,14 @@ public  class JsonResolver{
             return;
         }
         Object value = this.valueResolver.resolve(buf);
-        addToContainer(value);
+        addToContext(value);
         empty();
     }
 
     /**
-     * add a object for Json Value Type to current container.
+     * add a object for Json Value Type to current context.
      *
-     * Because current container could be JsonObject or JsonArray,
+     * Because current context could be JsonObject or JsonArray,
      * so if it is JsonObject, we need to regard as a field of JsonObject
      * and record the key has saved.
      * But if it is JsonArray, we only need to regard as a element of JsonObject.
@@ -276,13 +354,13 @@ public  class JsonResolver{
      * @param obj
      *           a object for Json Value Type
      */
-    private void addToContainer(Object obj){
+    private void addToContext(Object obj){
         Json container = getJson();
         if(container instanceof JsonObject) {
             // put the attribute
-            String key = this.key;
+            String key = getKey();
             ((JsonObject) container).put(key, obj);
-            this.key = null;
+            resetKey();
         }else if( container instanceof JsonArray) {
             // add the element
             ((JsonArray)container).put(obj);

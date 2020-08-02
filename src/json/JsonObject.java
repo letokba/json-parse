@@ -1,5 +1,7 @@
 package json;
 
+import resolve.JsonSerialize;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,26 @@ import java.util.Map;
 public class JsonObject  implements Json {
     private static final int DEFAULT_CAPACITY = 10;
     private Map<String , Object> map;
+
+    public static class Null {
+
+        @Override
+        public String toString() {
+            return "null";
+        }
+
+
+        @Override
+        protected Object clone() {
+            return this;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj == null || obj == this;
+        }
+    }
+
 
 
     public JsonObject(Map<String, Object> map) {
@@ -81,6 +103,9 @@ public class JsonObject  implements Json {
         throw new JsonException("object[\"" + name + "\"] is not Long");
     }
 
+    public Map<String, Object> getMap() {
+        return this.map;
+    }
 
     public JsonObject put(String name, Object value) {
         if(value == null) {
@@ -90,55 +115,8 @@ public class JsonObject  implements Json {
         return this;
     }
 
-    public JsonObject putString(String name, Boolean value) {
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
+    @Override
+    public String toString() {
+        return toJsonString();
     }
-
-    public JsonObject putBoolean(String name, Boolean value){
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
-    }
-
-    public JsonObject putInt(String name, Integer value){
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
-    }
-
-    public JsonObject putLong(String name, Long value){
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
-    }
-
-
-    public JsonObject putDouble(String name, Double value){
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
-    }
-
-    public JsonObject putJsonArray(String name, JsonArray value){
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
-    }
-
-
-    public JsonObject putJsonObject(String name, JsonObject value) {
-        if(value == null) {
-            throw new JsonException("the value is null");
-        }
-        return put(name, value);
-    }
-
 }

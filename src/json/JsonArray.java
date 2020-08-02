@@ -1,9 +1,10 @@
 package json;
 
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Wait
@@ -24,6 +25,10 @@ public class JsonArray implements Json {
 
     public JsonArray() {
         this(DEFAULT_CAPACITY);
+    }
+
+    public List<Object> getList() {
+        return this.list;
     }
 
     public Object get(int index) {
@@ -102,78 +107,19 @@ public class JsonArray implements Json {
 
     public JsonArray put(Object obj) {
         if(obj == null){
-            obj = new Null();
+            obj = new JsonObject.Null();
         }
         this.list.add(obj);
         return this;
     }
 
-    public JsonArray putString(String obj){
-
-        return put(obj);
-    }
-
-    public JsonArray putBoolean(Boolean obj){
-        if(obj == null){
-            throw new JsonException("the Boolean object is null");
+    public JsonArray put(int index, Object obj) {
+        if(index >= this.list.size()) {
+            throw new JSONException("array index >= size");
         }
-        return put(obj);
-    }
-
-    public JsonArray putInteger(Integer obj){
-        if(obj == null){
-            throw new JsonException("the Integer object is null");
-        }
-        return put(obj);
-    }
-
-    public JsonArray putLong(Long obj){
-        if(obj == null){
-            throw new JsonException("the Long object is null");
-        }
-        return put(obj);
-    }
-
-    public JsonArray putDouble(Double obj){
-        if(obj == null){
-            throw new JsonException("the Double object is null");
-        }
-        return put(obj);
-    }
-
-    public JsonArray putJsonNull(Null obj){
-        if(obj == null){
-            throw new JsonException("the Null object is null");
-        }
-        return put(obj);
+        this.list.add(index, obj);
+        return this;
     }
 
 
-    public JsonArray putJsonObject(JsonObject obj) {
-        if(obj == null){
-            throw new JsonException("the JsonObject object is null");
-        }
-        return put(obj);
-    }
-
-    public JsonArray putJsonArray(JsonArray obj) {
-        if(obj == null){
-            throw new JsonException("the JsonArray object is null");
-        }
-        return put(obj);
-    }
-
-    public JsonArray putList(List<Object> list) {
-        if(list == null) {
-            throw new JsonException("the List object is null");
-        }
-        return put(new JsonArray(list));
-    }
-
-    public JsonArray putMap(Map<String, Object> map) {
-        if(map == null) {
-            throw new JsonException("this Map object is null");
-        }
-        return put(new JsonObject(map));
-    }
 }

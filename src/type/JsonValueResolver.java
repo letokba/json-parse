@@ -1,6 +1,6 @@
 package type;
 
-import json.Null;
+import json.JsonObject;
 
 /**
  * @author Wait
@@ -93,6 +93,7 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a String Object
      */
+    @Override
     public String parseString(String value) {
         int minLength = 2;
         if(value.length() == minLength){
@@ -110,6 +111,7 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a Boolean Object
      */
+    @Override
     public Boolean parseBoolean(String value) {
         if(value.equals(LITERAL_TRUE)){
             return true;
@@ -127,6 +129,7 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a Number Object
      */
+    @Override
     public Number parseNumber(String value) {
         if(value.contains(FLAG_FLOUT)){
             // the number string include The decimal point.
@@ -143,9 +146,10 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a Boolean Object
      */
+    @Override
     public Object parseNull(String value) {
         if(value.equals(LITERAL_NULL)){
-            return new Null();
+            return new JsonObject.Null();
         }
         return null;
     }
@@ -172,7 +176,11 @@ public class JsonValueResolver implements ValueResolver {
     public boolean isNumberType(String value) {
         boolean result = true;
         for (int i = 0; i < value.length(); i++) {
-            if(value.charAt(i) < '0' || value.charAt(i) > '9' || value.charAt(i) != FLAG_FLOUT.charAt(0)) {
+            char c  = value.charAt(i);
+            if(c < '0' || c > '9') {
+                if(c == FLAG_FLOUT.charAt(0)) {
+                    continue;
+                }
                 result =  false;
                 break;
             }

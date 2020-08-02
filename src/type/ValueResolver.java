@@ -1,5 +1,7 @@
 package type;
 
+
+
 /**
  * @author Wait
  */
@@ -37,6 +39,45 @@ public interface ValueResolver {
      * @return a Object
      */
     public Object resolve(String value);
+
+
+    /**
+     * an actual parse method for String Type
+     * @param value
+     *          a string for String Type
+     * @return
+     *      a String Object
+     */
+    public String parseString(String value);
+
+
+    /**
+     * an actual parse method for Boolean Type
+     * @param value
+     *          a string for Boolean Type
+     * @return
+     *      a Boolean Object
+     */
+    public Boolean parseBoolean(String value);
+
+    /**
+     * an actual parse method for Number Type
+     * @param value
+     *          a string for Number Type
+     * @return
+     *      a Number Object
+     */
+    public Number parseNumber(String value);
+
+    /**
+     * an actual parse method for NULL Type
+     * @param value
+     *          a string for null one of three literals
+     * @return
+     *      a Boolean Object
+     */
+    public Object parseNull(String value);
+
 
 
 
