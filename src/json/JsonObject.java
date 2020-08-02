@@ -11,6 +11,9 @@ public class JsonObject  implements Json {
     private Map<String , Object> map;
 
 
+    public JsonObject(Map<String, Object> map) {
+        this.map = map;
+    }
 
     public JsonObject(int initialCapacity) {
         this.map = new HashMap<>(initialCapacity);

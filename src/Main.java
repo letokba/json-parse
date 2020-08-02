@@ -14,6 +14,7 @@ public class Main {
         JsonResolver resolver = new JsonResolver();
         File file = new File("src/context.json");
         resolver.resolve(file);
+
         JsonObject jsonObject = (JsonObject) resolver.getJson();
     }
 }

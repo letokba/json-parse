@@ -3,24 +3,23 @@ package json;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Wait
  */
 public class JsonArray implements Json {
     private static final int DEFAULT_CAPACITY = 10;
-    private List<Object> list;
-
-    private int count = 0;
-
+    private ArrayList<Object> list;
 
 
     public JsonArray(int initialCapacity) {
         this.list = new ArrayList<>(initialCapacity);
     }
 
-    public JsonArray(List<Object> list, int i) {
-        this.list = list;
+    public JsonArray(List<Object> list) {
+        this(list.size());
+        this.list.addAll(list);
     }
 
     public JsonArray() {
@@ -100,6 +99,7 @@ public class JsonArray implements Json {
     }
 
 
+
     public JsonArray put(Object obj) {
         if(obj == null){
             obj = new Null();
@@ -161,5 +161,19 @@ public class JsonArray implements Json {
             throw new JsonException("the JsonArray object is null");
         }
         return put(obj);
+    }
+
+    public JsonArray putList(List<Object> list) {
+        if(list == null) {
+            throw new JsonException("the List object is null");
+        }
+        return put(new JsonArray(list));
+    }
+
+    public JsonArray putMap(Map<String, Object> map) {
+        if(map == null) {
+            throw new JsonException("this Map object is null");
+        }
+        return put(new JsonObject(map));
     }
 }

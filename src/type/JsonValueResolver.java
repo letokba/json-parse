@@ -9,33 +9,6 @@ import json.Null;
  * JSON values include String, Number, Object, Array, and three literals( true, false, null)
  */
 public class JsonValueResolver implements ValueResolver {
-
-    /**
-     *  a JSON literal <code>true</code> for Boolean Type
-     */
-    private static final String LITERAL_TRUE = "true";
-
-    /**
-     *  a JSON literal <code>false</code> for Boolean Type
-     */
-    private static final String LITERAL_FALSE = "false";
-
-    /**
-     *  a JSON literal <code>null</code> for Null Type
-     */
-    private static final String LITERAL_NULL = "null";
-
-
-    /**
-     *  the flag for String Type
-     */
-    private static final char FLAG_STRING = '"';
-
-    /**
-     *  a flag for Float or Double Type.
-     */
-    private static final String FLAG_FLOUT = ".";
-
     /**
      * receiving a string and resolve it
      * the method use  Chain Of Responsibility one of the design modes.
@@ -120,7 +93,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a String Object
      */
-    @Override
     public String parseString(String value) {
         int minLength = 2;
         if(value.length() == minLength){
@@ -138,7 +110,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a Boolean Object
      */
-    @Override
     public Boolean parseBoolean(String value) {
         if(value.equals(LITERAL_TRUE)){
             return true;
@@ -156,7 +127,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a Number Object
      */
-    @Override
     public Number parseNumber(String value) {
         if(value.contains(FLAG_FLOUT)){
             // the number string include The decimal point.
@@ -173,7 +143,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return
      *      a Boolean Object
      */
-    @Override
     public Object parseNull(String value) {
         if(value.equals(LITERAL_NULL)){
             return new Null();
@@ -188,7 +157,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return  if value is String Type return true.
      *
      */
-    @Override
     public boolean isStringType(String value) {
         int lastIndex = value.length() - 1;
         return value.charAt(0) == FLAG_STRING && value.charAt(lastIndex) == FLAG_STRING;
@@ -201,9 +169,15 @@ public class JsonValueResolver implements ValueResolver {
      * @return  if value is Number Type return true.
      *
      */
-    @Override
     public boolean isNumberType(String value) {
-        return true;
+        boolean result = true;
+        for (int i = 0; i < value.length(); i++) {
+            if(value.charAt(i) < '0' || value.charAt(i) > '9' || value.charAt(i) != FLAG_FLOUT.charAt(0)) {
+                result =  false;
+                break;
+            }
+        }
+        return result;
     }
 
     /**
@@ -213,7 +187,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return  if value is Boolean Type return true.
      *
      */
-    @Override
     public boolean isBooleanType(String value) {
         return value.equals(LITERAL_TRUE) || value.equals(LITERAL_FALSE);
     }
@@ -225,7 +198,6 @@ public class JsonValueResolver implements ValueResolver {
      * @return  if value is Null Type return true.
      *
      */
-    @Override
     public boolean isNullType(String value) {
         return value.equals(LITERAL_NULL);
     }

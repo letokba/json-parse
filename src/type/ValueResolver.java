@@ -6,73 +6,38 @@ package type;
 public interface ValueResolver {
 
     /**
+     *  a JSON literal <code>true</code> for Boolean Type
+     */
+    public static final String LITERAL_TRUE = "true";
+
+    /**
+     *  a JSON literal <code>false</code> for Boolean Type
+     */
+    public static final String LITERAL_FALSE = "false";
+
+    /**
+     *  a JSON literal <code>null</code> for Null Type
+     */
+    public static final String LITERAL_NULL = "null";
+
+    /**
+     *  the flag for String Type
+     */
+    public static final char FLAG_STRING = '"';
+
+    /**
+     *  a flag for Float or Double Type.
+     */
+    public static final String FLAG_FLOUT = ".";
+
+
+    /**
      * 解析JSON中的值
      * @param value a string
      * @return a Object
      */
     public Object resolve(String value);
 
-    /**
-     * parse a string to String Object
-     * @param value
-     *              a string
-     * @return a String Object
-     */
-    public String parseString(String value);
 
-    /**
-     * parse a string to Boolean Object
-     * @param value
-     *              a string
-     * @return a Boolean Object
-     */
-    public Boolean parseBoolean(String value);
-
-    /**
-     * parse a string to Number Object
-     * @param value
-     *              a string
-     * @return a Number Object
-     */
-    public Number parseNumber(String value);
-
-    /**
-     * parse a string to Null Object
-     * @param value
-     *              a string
-     * @return a Null Object
-     */
-    public Object parseNull(String value);
-
-    /**
-     * check String Type
-     * @param value
-     *          a string
-     * @return <p>boolean</p>
-     */
-    public boolean isStringType(String value);
-    /**
-     * check Boolean Type
-     * @param value
-     *          a string
-     * @return <p>boolean</p>
-     */
-    public boolean isBooleanType(String value);
-
-    /**
-     * check Number Type
-     * @param value
-     *          a string
-     * @return <p>boolean</p>
-     */
-    public boolean isNumberType(String value);
-
-    /**
-     * check Null Type
-     * @param value
-     *          a string
-     * @return <p>boolean</p>
-     */
-    public boolean isNullType(String value);
 
 }
