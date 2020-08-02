@@ -10,18 +10,56 @@ import java.io.*;
 
 /**
  * @author Wait
+ *
+ * a JsonResolver is used to resolve the sson string or the json file.
+ * it can make the json string exchange to a Json Object.
+ * the Json Object can be <code>JsonObject</code> or <code>JsonArray</code>
+ * in the whole resolved process, firstly, it will dispatch the character
+ * from the <code>JsonStream</code>. secondly, because the char can in  string
+ * or out of string, acccording the char, select suit method to excute.
+ *
+ * of course, the json string only has a tier, so the JsonResolver could
+ * open one or more resoler to completely resolve the json.
+ * suit method to deal with
  */
 public  class JsonResolver{
+
+    /**
+     * a Json container include JsonObject and JsonArray.
+     * the resolved value will put to the container.
+     */
     private Json container;
+
+    /**
+     * a Json value resolver.
+     */
     private ValueResolver valueResolver;
 
+    /**
+     * a json data stream that implement the <code>JsonSteam</code> Interface
+     * the JsonResolver Object resolve the character from the steam
+     */
     private JsonStream in;
 
+    /**
+     * the flag to toggle the dispatcher pattern
+     */
     private static final char FLAG_TOGGLE = '"';
+
+    /**
+     * show that the processing character is or not Special Char
+     * default is true, show that will process Json Construct-Char
+     */
     private boolean isSpecialPattern = true;
 
-
+    /**
+     * cache the key of JsonObject.
+     */
     private String key;
+
+    /**
+     * record the normal character.
+     */
     private StringBuilder buf = new StringBuilder();
 
     /**
