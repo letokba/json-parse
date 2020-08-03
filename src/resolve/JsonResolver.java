@@ -40,7 +40,7 @@ public class JsonResolver{
      * a json data stream that implement the <code>JsonSteam</code> Interface
      * the JsonResolver Object resolve the character from the steam
      */
-    private JsonStream in;
+    private JsonReader in;
 
     /**
      * the flag to toggle the dispatcher pattern
@@ -79,7 +79,7 @@ public class JsonResolver{
      * @param valueResolver
      *                  a Json Value Resolver
      */
-    public JsonResolver(Json context, ValueResolver valueResolver) {
+    private JsonResolver(Json context, ValueResolver valueResolver) {
         this.valueResolver = valueResolver;
         this.context = context;
     }
@@ -150,7 +150,7 @@ public class JsonResolver{
     public Json resolve(String text) {
         // before resolving, empty context.
         setContext(null);
-        return resolve(new ImplJsonStream(text));
+        return resolve(new JsonReader(text));
     }
 
     /**
@@ -162,7 +162,7 @@ public class JsonResolver{
     public Json resolve(Reader reader) throws IOException {
         //before resolve, empty context.
         setContext(null);
-        return resolve(new ImplJsonStream(reader));
+        return resolve(new JsonReader(reader));
     }
 
     /**
@@ -171,7 +171,7 @@ public class JsonResolver{
      * @param stream
      *              a Json data stream
      */
-    public Json resolve(JsonStream stream)  {
+    public Json resolve(JsonReader stream)  {
         this.in = stream;
         int b = -1;
         while ((b = in.read()) != -1) {

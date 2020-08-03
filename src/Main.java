@@ -1,7 +1,9 @@
+import json.JsonArray;
 import json.JsonObject;
+import resolve.JsonResolver;
+
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Wait
@@ -10,15 +12,10 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-        JsonObject jsonObject = new JsonObject();
-        List<Person> children = new ArrayList<>();
-        children.add( new Person("mike", 20));
-        children.add(new Person("james", 10));
-        Person ben = new Person("ben", 40);
-        Person kitty = new Person("kitty", 39);
-        ben.setChildren(children);
-        ben.setSpouse(kitty);
-        jsonObject.put("family", ben);
-        System.out.println(jsonObject);
+        JsonResolver resolver = new JsonResolver();
+        String file = "src/context.json";
+        JsonObject object = resolver.resolveObject("{\"property\":[{\"code\":[\"red\",\"green\"],\"name\":\"quality\",\"type\":\"node\",\"value\":0.2}],\"id\":\"fruit\",\"class\":\"bean.Fruit\"}");
+        System.out.println(object);
+
     }
 }
