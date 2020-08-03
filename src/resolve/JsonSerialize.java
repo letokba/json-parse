@@ -3,6 +3,7 @@ package resolve;
 import json.JsonArray;
 import json.JsonObject;
 
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,10 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    private void serializeObject(JsonObject object, StringBuilder builder) {
+    public void serializeObject(JsonObject object, StringBuilder builder) {
+        if (object == null) {
+            return;
+        }
         Map<String, Object> map = object.getMap();
         serializeMap(map, builder);
     }
@@ -46,7 +50,10 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    private void serializeArray(JsonArray array, StringBuilder builder) {
+    public void serializeArray(JsonArray array, StringBuilder builder) {
+        if (array == null) {
+            return;
+        }
         List<Object> list = array.getList();
         serializeList(list, builder);
     }
@@ -58,7 +65,10 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    private void serializeJavaBean(Object bean, StringBuilder builder) {
+    public void serializeJavaBean(Object bean, StringBuilder builder) {
+        if (bean == null) {
+            return;
+        }
         Class<?> cl = bean.getClass();
         Field[] fields = cl.getDeclaredFields();
         builder.append('{');
@@ -83,7 +93,10 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    private void serializeList(List list, StringBuilder builder) {
+    public void serializeList(List list, StringBuilder builder) {
+        if(list == null) {
+            return;
+        }
         if(list.isEmpty()) {
             builder.append("[]");
             return;
@@ -103,7 +116,10 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    private void serializeMap(Map<String, Object> map, StringBuilder builder) {
+    public void serializeMap(Map<String, Object> map, StringBuilder builder) {
+        if(map == null) {
+            return;
+        }
         if (map.isEmpty()) {
             builder.append("{}");
             return;
