@@ -31,11 +31,28 @@ public class JsonArray extends Json  {
         return this.list;
     }
 
+
+    public int size() {
+        return list.size();
+    }
+
     public Object get(int index) {
         if(index >= this.list.size()){
             throw new JsonException("array index >= size");
         }
         return this.list.get(index);
+    }
+
+    public <T> T get(int index, Class<T> tClass) {
+        Object obj = get(index);
+        if(tClass.isInstance(obj)) {
+            return tClass.cast(obj);
+        }
+        return null;
+    }
+
+    public Class<?> getEleClass(int index) {
+        return get(index).getClass();
     }
 
     public String getString(int index) {
@@ -119,15 +136,21 @@ public class JsonArray extends Json  {
     }
 
 
-
-
-
     public JsonArray put(int index, Object obj) {
-        if(index >= this.list.size()) {
-            throw new JSONException("array index >= size");
+        if(! isJsonType(obj)) {
+
+            this.list.add(index, toJson(obj));
+        }else {
+            if(obj == null) {
+                obj = new JsonObject.Null();
+            }
+            this.list.add(index, obj);
         }
-        this.list.add(index, obj);
         return this;
+    }
+
+    public <T> List<T> toList(Class<T> genericType) {
+        return toList(this, genericType);
     }
 
     @Override

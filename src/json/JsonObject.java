@@ -1,10 +1,5 @@
 package json;
 
-
-import resolve.JsonResolver;
-import resolve.JsonSerialize;
-
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +9,7 @@ import java.util.Map;
 public class JsonObject  extends Json {
     private static final int DEFAULT_CAPACITY = 10;
     private Map<String , Object> map;
+
 
     /**
      * a Null be used to expressed as the literal value "null"
@@ -182,6 +178,10 @@ public class JsonObject  extends Json {
             this.map.put(name, value);
         }
         return this;
+    }
+
+    public <T> T getJavaObject(Class<T> tClass){
+        return toJavaBean(this, tClass);
     }
 
     @Override
