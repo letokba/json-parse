@@ -1,7 +1,6 @@
 package resolve;
 
 import json.JsonException;
-
 import java.io.IOException;
 import java.io.Reader;
 
@@ -103,7 +102,7 @@ public class JsonReader extends Reader {
      * @param n
      *          the char array length
      */
-    public void filterInvalid(char[] buffer, int n) {
+    private void filterInvalid(char[] buffer, int n) {
         this.count = 0;
         for (int i = 0; i<n; i++) {
             char c = buffer[i];

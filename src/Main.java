@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         JsonResolver resolver = new JsonResolver();
         String file = "src/context.json";
-        JsonObject object = resolver.resolveObject("{\"property\":[{\"code\":[\"red\",\"green\"],\"name\":\"quality\",\"type\":\"node\",\"value\":0.2}],\"id\":\"fruit\",\"class\":\"bean.Fruit\"}");
+        JsonObject object = resolver.resolveObject(new FileReader(file));
         System.out.println(object);
 
     }

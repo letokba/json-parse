@@ -162,7 +162,9 @@ public class JsonResolver{
     public Json resolve(Reader reader) throws IOException {
         //before resolve, empty context.
         setContext(null);
-        return resolve(new JsonReader(reader));
+        Json json = resolve(new JsonReader(reader));
+        reader.close();
+        return json;
     }
 
     /**
