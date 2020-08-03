@@ -2,25 +2,25 @@ package json;
 
 
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Wait
  */
-public class JsonArray implements Json  {
+public class JsonArray extends Json  {
     private static final int DEFAULT_CAPACITY = 10;
-    private ArrayList<Object> list;
+    private List<Object> list;
+
 
 
     public JsonArray(int initialCapacity) {
         this.list = new ArrayList<>(initialCapacity);
     }
 
-    public JsonArray(List<Object> list) {
-        this(list.size());
-        this.list.addAll(list);
+    public JsonArray(List list) {
+        this();
+        this.list = ((JsonArray)toJson(list)).getList();
     }
 
     public JsonArray() {
@@ -105,13 +105,22 @@ public class JsonArray implements Json  {
 
 
 
-    public JsonArray put(Object obj) {
-        if(obj == null){
-            obj = new JsonObject.Null();
+    public JsonArray put(Object value) {
+        if(! isJsonType(value)) {
+
+            this.list.add(toJson(value));
+        }else {
+            if(value == null) {
+                value = new JsonObject.Null();
+            }
+            this.list.add(value);
         }
-        this.list.add(obj);
         return this;
     }
+
+
+
+
 
     public JsonArray put(int index, Object obj) {
         if(index >= this.list.size()) {

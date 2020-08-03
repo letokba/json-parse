@@ -1,19 +1,24 @@
 package json;
 
+
+import resolve.JsonResolver;
 import resolve.JsonSerialize;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Wait
  */
-public class JsonObject  implements Json {
+public class JsonObject  extends Json {
     private static final int DEFAULT_CAPACITY = 10;
     private Map<String , Object> map;
 
-    public static class Null {
-
+    /**
+     * a Null be used to expressed as the literal value "null"
+     */
+    public static class Null extends Json {
         @Override
         public String toString() {
             return "null";
@@ -32,19 +37,39 @@ public class JsonObject  implements Json {
     }
 
 
-
+    /**
+     * construct a JsonObject by getting the map
+     * @param map
+     *          a Map Object
+     */
     public JsonObject(Map<String, Object> map) {
-        this.map = map;
+        this();
+        this.map = ((JsonObject)toJson(map)).getMap();
     }
 
+    /**
+     * construct a JsonObject by getting the initial capacity of map
+     * @param initialCapacity
+     *                       the map's initial capacity
+     */
     public JsonObject(int initialCapacity) {
         this.map = new HashMap<>(initialCapacity);
     }
 
+    /**
+     * default constructor, the map will use the default size.
+     */
     public JsonObject() {
         this(DEFAULT_CAPACITY);
     }
 
+    /**
+     * get a field by the name.
+     * @param name
+     *           field's key
+     * @return
+     *          field's value
+     */
     public Object get(String name) {
         Object obj = this.map.get(name);
         if(obj == null) {
@@ -78,7 +103,6 @@ public class JsonObject  implements Json {
         throw new JsonException("object[\"" + name + "\"] is not Null");
     }
 
-
     public int getInt(String name) {
         Object obj = get(name);
         if(obj instanceof Integer) {
@@ -103,15 +127,60 @@ public class JsonObject  implements Json {
         throw new JsonException("object[\"" + name + "\"] is not Long");
     }
 
+    public JsonObject getJsonObject(String name) {
+        Object obj = get(name);
+        if(obj instanceof JsonObject) {
+            return (JsonObject)obj;
+        }
+        throw new JsonException("object[\"" + name + "\"] is not JsonObject");
+    }
+
+    public JsonArray getJsonArray(String name) {
+        Object obj = get(name);
+        if(obj instanceof JsonArray) {
+            return (JsonArray)obj;
+        }
+        throw new JsonException("object[\"" + name + "\"] is not JsonArray");
+    }
+
+    /**
+     * JsonObject and Map exchange
+     * @return
+     *         a Map object
+     */
     public Map<String, Object> getMap() {
         return this.map;
     }
 
-    public JsonObject put(String name, Object value) {
-        if(value == null) {
-            value = new Null();
+    public <T> T get(String name, Class<T> cl) {
+        Object obj = get(name);
+        if(cl.isInstance(obj)) {
+            return cl.cast(obj);
         }
-        this.map.put(name, value);
+        return null;
+    }
+
+
+
+    /**
+     * put a field has the key and value in map
+     * @param name
+     *          field's key
+     * @param value
+     *          field's value
+     * @return
+     *          new JsonObject
+     */
+    public JsonObject put(String name, Object value) {
+        if(! isJsonType(value)) {
+            Json json = toJson(value);
+            this.map.put(name, json);
+        }else {
+            if(value == null) {
+                value = new Null();
+            }
+            this.map.put(name, value);
+        }
         return this;
     }
 
