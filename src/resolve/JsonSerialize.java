@@ -3,35 +3,62 @@ package resolve;
 import json.JsonArray;
 import json.JsonObject;
 
-import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Wait
+ *
+ * a JsonSerialize be used to serialize a JavaBean or JsonObject or JsonArray,so on.
+ * it can create a json text by a object.
  */
 public class JsonSerialize {
 
-
+    /**
+     * serialize entry method
+     * @param object
+     *              a object
+     * @return a Json string
+     */
     public String serialize(Object object) {
         StringBuilder builder = new StringBuilder();
         serializeValue(object, builder);
         return builder.toString();
     }
 
-
-    public void serializeObject(JsonObject object, StringBuilder builder) {
+    /**
+     * serialize JsonObject
+     * @param object
+     *              a JsonObject
+     * @param builder
+     *              a json string buffer
+     */
+    private void serializeObject(JsonObject object, StringBuilder builder) {
         Map<String, Object> map = object.getMap();
         serializeMap(map, builder);
     }
 
-    public void serializeArray(JsonArray array, StringBuilder builder) {
+    /**
+     * serialize JsonArray
+     * @param array
+     *              a JsonArray
+     * @param builder
+     *              a json string buffer
+     */
+    private void serializeArray(JsonArray array, StringBuilder builder) {
         List<Object> list = array.getList();
         serializeList(list, builder);
     }
 
-    public void serializeJavaBean(Object bean, StringBuilder builder) {
+    /**
+     * serialize JavaBean
+     * @param bean
+     *              a JavaBean
+     * @param builder
+     *              a json string buffer
+     */
+    private void serializeJavaBean(Object bean, StringBuilder builder) {
         Class<?> cl = bean.getClass();
         Field[] fields = cl.getDeclaredFields();
         builder.append('{');
@@ -49,7 +76,14 @@ public class JsonSerialize {
         builder.setCharAt(builder.length() -1 , '}');
     }
 
-    public void serializeList(List list, StringBuilder builder) {
+    /**
+     * serialize JsonArray
+     * @param list
+     *              a List
+     * @param builder
+     *              a json string buffer
+     */
+    private void serializeList(List list, StringBuilder builder) {
         if(list.isEmpty()) {
             builder.append("[]");
             return;
@@ -62,7 +96,14 @@ public class JsonSerialize {
         builder.setCharAt(builder.length() -1 , ']');
     }
 
-    public void serializeMap(Map<String, Object> map, StringBuilder builder) {
+    /**
+     * serialize JsonArray
+     * @param map
+     *              a Map
+     * @param builder
+     *              a json string buffer
+     */
+    private void serializeMap(Map<String, Object> map, StringBuilder builder) {
         if (map.isEmpty()) {
             builder.append("{}");
             return;
@@ -77,6 +118,15 @@ public class JsonSerialize {
         builder.setCharAt(builder.length() -1 , '}');
     }
 
+    /**
+     * append a key-value to the buffer.
+     * @param key
+     *          a key
+     * @param value
+     *          a value
+     * @param builder
+     *          a json string buffer.
+     */
     private void appendAttribute(String key, Object value, StringBuilder builder){
         builder.append('"');
         builder.append(key);
@@ -86,6 +136,13 @@ public class JsonSerialize {
         builder.append(',');
     }
 
+    /**
+     * serialize dispatcher
+     * @param value
+     *              a object
+     * @param builder
+     *              a json string buffer.
+     */
     private void serializeValue(Object value, StringBuilder builder) {
         if(value == null) {
             builder.append("null");
@@ -115,7 +172,12 @@ public class JsonSerialize {
         }
     }
 
-
+    /**
+     * check the value is belong to the Json Literal Value and the Number Type
+     * @param value
+     *          a object
+     * @return if check pass, return true.
+     */
     private boolean isJsonLiteral(Object value) {
         return  value instanceof Boolean ||
                 value instanceof Number  ||
