@@ -210,6 +210,4 @@ public class JsonValueResolver implements ValueResolver {
         return value.equals(LITERAL_NULL);
     }
 
-
-
 }

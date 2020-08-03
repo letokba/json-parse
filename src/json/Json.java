@@ -15,4 +15,5 @@ public interface Json {
     default public String toJsonString() {
         return new JsonSerialize().serialize(this);
     }
+
 }

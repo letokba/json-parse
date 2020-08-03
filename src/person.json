@@ -1,0 +1,26 @@
+{
+  "family": {
+    "name": "ben",
+    "age": 40,
+    "spouse": {
+      "name": "kitty",
+      "age": 39,
+      "spouse": null,
+      "children": null
+    },
+    "children": [
+      {
+        "name": "mike",
+        "age": 20,
+        "spouse": null,
+        "children": null
+      },
+      {
+        "name": "jaze",
+        "age": 10,
+        "spouse": null,
+        "children": null
+      }
+    ]
+  }
+}

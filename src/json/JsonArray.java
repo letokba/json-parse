@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Wait
  */
-public class JsonArray implements Json {
+public class JsonArray implements Json  {
     private static final int DEFAULT_CAPACITY = 10;
     private ArrayList<Object> list;
 
@@ -121,5 +121,8 @@ public class JsonArray implements Json {
         return this;
     }
 
-
+    @Override
+    public String toString() {
+        return toJsonString();
+    }
 }

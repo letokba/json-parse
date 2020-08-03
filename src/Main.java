@@ -1,13 +1,7 @@
-import json.JsonArray;
 import json.JsonObject;
-import resolve.JsonResolver;
-import resolve.JsonSerialize;
-import type.JsonValueResolver;
-import type.ValueResolver;
-
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Wait
@@ -16,15 +10,15 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-        JsonResolver resolver = new JsonResolver();
-        String jsonFile = "src/house.json";
-        String jsonFile2 = "src/context.json";
-        long start = System.nanoTime();
-        JsonArray array = resolver.resolveArray(new FileReader(jsonFile));
-        long end = System.nanoTime();
-        System.out.println(array.toJsonString());
-        JsonObject object = resolver.resolveObject(new FileReader(jsonFile2));
-        System.out.println(object);
-        System.out.println("json parse time is " + (double)(end - start) / 1000000 + " ms");
+        JsonObject jsonObject = new JsonObject();
+        List<Person> children = new ArrayList<>();
+        children.add( new Person("mike", 20));
+        children.add(new Person("james", 10));
+        Person ben = new Person("ben", 40);
+        Person kitty = new Person("kitty", 39);
+        ben.setChildren(children);
+        ben.setSpouse(kitty);
+        jsonObject.put("family", ben);
+        System.out.println(jsonObject);
     }
 }
