@@ -1,41 +1,65 @@
 package json;
 
 
-import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Wait
  */
-public class JsonArray extends Json  {
+public class JsonArray extends Json {
     private static final int DEFAULT_CAPACITY = 10;
     private List<Object> list;
 
-
-
+    /**
+     * construct a JsonArray by assigning the initial capacity.
+     * @param initialCapacity
+     *                      the JsonArray's init capacity
+     */
     public JsonArray(int initialCapacity) {
         this.list = new ArrayList<>(initialCapacity);
     }
 
+    /**
+     * construct a JsonArray by assigning the items.
+     * @param list
+     *             a list.
+     */
     public JsonArray(List list) {
         this();
         this.list = ((JsonArray)toJson(list)).getList();
     }
 
+    /**
+     * construct a JsonArray by using the default init capacity.
+     */
     public JsonArray() {
         this(DEFAULT_CAPACITY);
     }
 
+    /**
+     * I don't wish to expose the inner list object.
+     * but other methods need it.
+     * the method would remove.
+     */
     public List<Object> getList() {
         return this.list;
     }
 
-
+    /**
+     * get the JsonArray size
+     */
     public int size() {
         return list.size();
     }
 
+    /**
+     * the general method to get the element from JsonArray.
+     * @param index
+     *             the index for needing element
+     * @return
+     *        the specified element.
+     */
     public Object get(int index) {
         if(index >= this.list.size()){
             throw new JsonException("array index >= size");
@@ -43,6 +67,13 @@ public class JsonArray extends Json  {
         return this.list.get(index);
     }
 
+    /**
+     * get a specified element by assigning the type.
+     * @param tClass
+     *              the element's Type
+     * @return
+     *          a element has specified type.
+     */
     public <T> T get(int index, Class<T> tClass) {
         Object obj = get(index);
         if(tClass.isInstance(obj)) {
@@ -51,6 +82,9 @@ public class JsonArray extends Json  {
         return null;
     }
 
+    /**
+     * look over a element's type
+     */
     public Class<?> getEleClass(int index) {
         return get(index).getClass();
     }
@@ -121,34 +155,53 @@ public class JsonArray extends Json  {
     }
 
 
-
-    public JsonArray put(Object value) {
-        if(! isJsonType(value)) {
-
-            this.list.add(toJson(value));
-        }else {
-            if(value == null) {
-                value = new JsonObject.Null();
-            }
-            this.list.add(value);
+    /**
+     * put a object to this JsonArray.
+     * only save in the JsonArray and don't completely solve the object.
+     * So, if you put a javaBean, the JsonArray look is very funny.
+     * Because, it don't one-one mapping with the Json String.
+     * But you can get legal Json String by using <code>toJsonString()</code>
+     *
+     *
+     * through it allow to put objects of different types,
+     * but as mush as possible put common type.
+     *
+     * @param obj
+     *              a object
+     * @return a new JsonArray.
+     */
+    public JsonArray put(Object obj) {
+        if(obj == null) {
+            obj = new JsonObject.Null();
         }
+        this.list.add(obj);
         return this;
     }
 
 
+    /**
+     * put a object but don't serialize the object.
+     * you can use <code>get(int,Object)</code> to get same Object.
+     * @param index
+     *             the object's position
+     * @param obj
+     *              a object
+     * @return a new JsonArray.
+     */
     public JsonArray put(int index, Object obj) {
-        if(! isJsonType(obj)) {
-
-            this.list.add(index, toJson(obj));
-        }else {
-            if(obj == null) {
-                obj = new JsonObject.Null();
-            }
-            this.list.add(index, obj);
+        if(obj == null) {
+            obj = new JsonObject.Null();
         }
+        this.list.add(index, obj);
         return this;
     }
 
+    /**
+     * the JsonArray to a List Object.
+     * @param genericType
+     *          the object's type that saved in list.
+     * @return  a list
+     */
     public <T> List<T> toList(Class<T> genericType) {
         return toList(this, genericType);
     }
