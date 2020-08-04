@@ -159,7 +159,11 @@ public class JsonObject  extends Json {
 
 
     /**
-     * put a field has the key and value in map
+     * put a field has the key and value in map.
+     * only save in the JsonArray and don't completely solve the object.
+     * So, if you put a javaBean, the JsonArray look is very funny.
+     * Because, it don't one-one mapping with the Json String.
+     * But you can get legal Json String by using <code>toJsonString()</code>
      * @param name
      *          field's key
      * @param value
@@ -168,18 +172,21 @@ public class JsonObject  extends Json {
      *          new JsonObject
      */
     public JsonObject put(String name, Object value) {
-        if(! isJsonType(value)) {
-            Json json = toJson(value);
-            this.map.put(name, json);
-        }else {
-            if(value == null) {
-                value = new Null();
-            }
-            this.map.put(name, value);
+        if(value == null) {
+            value = new Null();
         }
+        this.map.put(name, value);
         return this;
     }
 
+    /**
+     * the JsonObject translate to a JavaBean.
+     * all field of the JavaBean must be in the JsonObject.
+     * @param tClass
+     *              the JavaBean Type
+     * @return
+     *          a JavaBean instance.
+     */
     public <T> T getJavaBean(Class<T> tClass){
         return toJavaBean(this, tClass);
     }

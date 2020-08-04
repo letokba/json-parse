@@ -1,6 +1,5 @@
 package json;
 
-import org.json.JSONException;
 import resolve.JsonResolver;
 import resolve.JsonSerialize;
 
@@ -9,7 +8,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
