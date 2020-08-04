@@ -4,8 +4,6 @@ import json.Json;
 import json.JsonArray;
 import json.JsonException;
 import json.JsonObject;
-import type.JsonValueResolver;
-import type.ValueResolver;
 
 import java.io.*;
 
