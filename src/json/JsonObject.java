@@ -180,7 +180,7 @@ public class JsonObject  extends Json {
         return this;
     }
 
-    public <T> T getJavaObject(Class<T> tClass){
+    public <T> T getJavaBean(Class<T> tClass){
         return toJavaBean(this, tClass);
     }
 

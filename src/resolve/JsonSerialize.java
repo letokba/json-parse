@@ -34,7 +34,7 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    public void serializeObject(JsonObject object, StringBuilder builder) {
+    public void serializeJsonObject(JsonObject object, StringBuilder builder) {
         if (object == null) {
             return;
         }
@@ -49,7 +49,7 @@ public class JsonSerialize {
      * @param builder
      *              a json string buffer
      */
-    public void serializeArray(JsonArray array, StringBuilder builder) {
+    public void serializeJsonArray(JsonArray array, StringBuilder builder) {
         if (array == null) {
             return;
         }
@@ -86,7 +86,7 @@ public class JsonSerialize {
     }
 
     /**
-     * serialize JsonArray
+     * serialize List
      * @param list
      *              a List
      * @param builder
@@ -109,7 +109,7 @@ public class JsonSerialize {
     }
 
     /**
-     * serialize JsonArray
+     * serialize Map
      * @param map
      *              a Map
      * @param builder
@@ -171,10 +171,10 @@ public class JsonSerialize {
             builder.append(value);
         }
         else if(value instanceof JsonObject) {
-            serializeObject((JsonObject) value, builder);
+            serializeJsonObject((JsonObject) value, builder);
         }
         else if(value instanceof JsonArray) {
-            serializeArray((JsonArray) value, builder);
+            serializeJsonArray((JsonArray) value, builder);
         }
         else if(value instanceof List) {
             serializeList((List) value, builder);
